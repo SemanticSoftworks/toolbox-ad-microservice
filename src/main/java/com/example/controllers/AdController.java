@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 
@@ -24,50 +25,39 @@ public class AdController {
 
     @RequestMapping(value = "/search/{searchString}", method = RequestMethod.GET)
     public ResponseEntity<List<AdDTO>> search(@PathVariable String searchString){
-        System.out.println(searchString);
+
         List<AdDTO> resultList = this.convertToAdDTOList(adService.searchAdWith(searchString));
-        System.out.println(resultList.size() + " searchStr = " + searchString);
         return new ResponseEntity<>(resultList, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<AdDTO> getAd(@PathVariable Long id){
-        AdDTO ad = toDTO(adService.findAdById(id));
-        if(ad == null){
 
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        AdDTO ad = toDTO(adService.findAdById(id));
+        if(ad == null){ return new ResponseEntity<>(HttpStatus.BAD_REQUEST);}
         return new ResponseEntity<>(ad, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST, consumes={"application/json"})
-    public ResponseEntity<AdDTO> addAd(@RequestBody AdDTO adDTO)
+    public ResponseEntity<AdDTO> addAd(@RequestBody String adRecieved)
     {
-
-        System.out.println("In ad/add: ");
-        System.out.println("ad_title: " + adDTO.getTitle());
-        //AdDTO adDTO = new Gson().fromJson(adRecieved, AdDTO.class);
-
+        //System.out.println("adRecieved: " + adRecieved);
+        AdDTO adDTO = new Gson().fromJson(adRecieved, AdDTO.class);
         if(adDTO == null)
         {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
-        adService.addAd(toAd(adDTO));
-
+        Ad ad = toAd(adDTO);
+        ad.setDate(Calendar.getInstance());
+        adService.addAd(ad);
         return new ResponseEntity<>(adDTO, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/getpage/{pageNr}", method = RequestMethod.GET)
     public ResponseEntity<List<AdDTO>> getAllAds(@PathVariable int pageNr)
     {
-        System.out.println("in /getads");
         List<AdDTO> resultList = convertToAdDTOList(adService.getAllAds(pageNr));
-        if(resultList == null || resultList.isEmpty())
-        {
-            resultList = new ArrayList<>();
-        }
-
+        if(resultList == null || resultList.isEmpty()) { resultList = new ArrayList<>(); }
         return new ResponseEntity<>(resultList, HttpStatus.OK);
     }
 
@@ -98,7 +88,7 @@ public class AdController {
         {
             return null;
         }
-        return new AdDTO(ad.getAdId(), ad.getUserId(), getCategoryTitleById(ad.getCategoryId()), ad.getTitle(), ad.getDescription(), ad.getDuration());
+        return new AdDTO(ad.getAdId(), ad.getUserId(), ad.getCategoryId(), ad.getTitle(), ad.getDescription(), ad.getDate(), ad.getPhotosIds());
     }
 
     private Ad toAd(AdDTO adDTO)
@@ -108,29 +98,6 @@ public class AdController {
             return null;
         }
 
-        return new Ad(adDTO.getUser(), getCategoryIdByTitle(adDTO.getCategory()), adDTO.getTitle(), adDTO.getDescription(), adDTO.getDuration(), null);
-    }
-
-    private long getCategoryIdByTitle(String title)
-    {
-        switch(title)
-        {
-            case "test":
-                return 0;
-            default:
-                return 0;
-        }
-    }
-
-    private String getCategoryTitleById(long id)
-    {
-
-        switch ((int)id)
-        {
-            case 0:
-                return "test";
-            default:
-                return "test";
-        }
+        return new Ad(adDTO.getUser(), adDTO.getCategoryId(), adDTO.getTitle(), adDTO.getDescription(), adDTO.getDate(), adDTO.getPhotosId());
     }
 }
