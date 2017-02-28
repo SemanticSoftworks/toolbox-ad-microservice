@@ -9,20 +9,25 @@ public class AdDTO {
 
     private long adId;
     private long userId;
-    private String category;
-    private String title2;
+    private long category;
+    private String title;
     private String description;
-    private Calendar duration;
+    private Calendar date;
+    private long[] photosId;
 
-    public AdDTO(long adId, long user_id, String category, String title, String description, Calendar duration) {
+    public AdDTO(long adId, long userId, long category, String title, String description, Calendar date, long[] photosId) {
         this.adId = adId;
-        this.userId = user_id;
+        this.userId = userId;
         this.category = category;
-        this.title2 = title;
+        this.title = title;
         this.description = description;
-        this.duration = duration;
+        this.date = date;
+        this.photosId = photosId;
     }
 
+    public long[] getPhotosId() {
+        return photosId;
+    }
     public long getAdId() {
         return adId;
     }
@@ -31,19 +36,19 @@ public class AdDTO {
         return userId;
     }
 
-    public String getCategory() {
+    public long getCategoryId() {
         return category;
     }
 
     public String getTitle() {
-        return title2;
+        return title;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public Calendar getDuration() {
-        return duration;
+    public Calendar getDate() {
+        return date;
     }
 }

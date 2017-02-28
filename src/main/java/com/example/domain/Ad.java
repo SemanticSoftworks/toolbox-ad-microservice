@@ -22,7 +22,7 @@ public class Ad {
     private String description;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Calendar duration;
+    private Calendar date;
 
     private long[] photosId;
 
@@ -32,7 +32,7 @@ public class Ad {
         this.categoryId = categoryId;
         this.title = title;
         this.description = description;
-        this.duration = duration;
+        this.date = duration;
         this.photosId = photosIds;
     }
 
@@ -72,23 +72,23 @@ public class Ad {
         this.description = description;
     }
 
-    public Calendar getDuration() {
-        return duration;
+    public Calendar getDate() {
+        return date;
     }
 
-    public void setDuration(Calendar duration) {
-        this.duration = duration;
+    public void setDate(Calendar date) {
+        this.date = date;
     }
 
     public long[] getPhotosIds() {
         return photosId;
     }
 
-    public void setPhotos(byte[][] photos) {
-        //this.photos = photos;
+    public void setPhotosId(long[] photosId) {
+        this.photosId = photosId;
     }
 
-   public void clearPhotos()
+    public void clearPhotos()
    {
        //this.photos = new ArrayList<>();
    }
