@@ -4,15 +4,11 @@ services:
     build: .
     ports:
       - "8093:8093"
-    #links:
-    #  - "db:database"
-    #volumes:
     depends_on:
           - "addb"
-    #command: ["./wait-for-it.sh", "docker2:5432", "--", "python", "app.py"]
   addb:
-    #image: abc
     build: ./mysql
+    volumes:
+          - /home/docker/SemanticSoftworks/ad-microservice-db:/var/lib/mysql
     ports:
-      #- "3308:3306"
       - "3309:3309"
