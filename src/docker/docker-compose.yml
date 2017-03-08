@@ -6,9 +6,11 @@ services:
       - "8093:8093"
     depends_on:
           - "addb"
+    restart: always
   addb:
     build: ./mysql
     volumes:
           - /home/docker/SemanticSoftworks/ad-microservice-db:/var/lib/mysql
     ports:
       - "3309:3309"
+    restart: always
